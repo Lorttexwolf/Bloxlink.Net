@@ -1,0 +1,27 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Description>Bloxlink.Net is an unofficial .NET API Wrapper for the Bloxlink API</Description>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <Authors>Lorttexwolf</Authors>
+        <PackageTags>roblox;wrapper;api</PackageTags>
+        <PackageProjectUrl>https://github.com/Lorttexwolf/Bloxlink.Net</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>git://github.com/Lorttexwolf/Bloxlink.Net</RepositoryUrl>
+        <Copyright>MIT</Copyright>
+        <!-- <PackageReadmeFile>README.md</PackageReadmeFile> -->
+        <PackageIcon>bloxlinkicon.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    </PropertyGroup>
+
+    <ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+        <None Include="..\..\media\bloxlinkicon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+</Project>
