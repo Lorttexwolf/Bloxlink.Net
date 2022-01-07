@@ -7,11 +7,17 @@ using Bloxlink.Rest;
 
 namespace Bloxlink
 {
-    public class BloxlinkClient
+    public class BloxlinkClient : IDisposable
     {
         protected readonly BloxlinkRestClient _restClient = new();
 
         protected readonly IDictionary<ulong, ulong> _userCache = new Dictionary<ulong, ulong>();
+
+        public void Dispose()
+        {
+            this._restClient.Dispose();
+            this._userCache.Clear();
+        }
 
         /// <summary>
         /// Gets a Bloxlink account linked to a certain <paramref name="discordUser"/>.
@@ -23,16 +29,21 @@ namespace Bloxlink
             {
                 return userId;
             }
-            return (await this._restClient.GetRobloxUser(discordUser)).GlobalAccount;
+
+            userId = (await this._restClient.GetRobloxUser(discordUser)).GlobalAccount;
+
+            this._userCache.Add(discordUser, userId);
+
+            return userId;
         }
         /// <summary>
         /// Gets a Bloxlink account linked to a certain <paramref name="discordUser"/> in the specified <paramref name="guild"/>.
         /// </summary>
         /// <remarks>
-        /// Guild user cache is not implemented yet.
+        /// Guild member cache is not implemented.
         /// </remarks>
         /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
-        public async Task<ulong?> GetUser(ulong discordUser, ulong? guild = null)
+        public async Task<ulong?> GetUser(ulong discordUser, ulong guild)
         {
             return (await this._restClient.GetRobloxUser(discordUser, guild)).GuildAccount;
         }

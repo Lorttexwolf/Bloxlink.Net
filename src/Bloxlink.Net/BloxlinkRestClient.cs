@@ -47,38 +47,28 @@ namespace Bloxlink.Rest
 
             this._stateLock.Wait();
 
-            HttpResponseMessage res = await _httpClient.GetAsync(uri);
-
-            if (!res.IsSuccessStatusCode)
+            HttpResponseMessage res;
+            
+            while (true)
             {
-                if (options.RetryAtTimeout && res.StatusCode == HttpStatusCode.TooManyRequests)
-                {
-                    while (true)
-                    {
-                        if (this._waiter.IsWaiting)
-                        {
-                            Trace.WriteLine($"Rest - Request {uri} waiting {this._waiter.WaitTime}");
-                            this._waiter.Sleep();
-                        }
+                res = await _httpClient.GetAsync(uri);
 
-                        res = await _httpClient.GetAsync(uri);
-
-                        if (res.IsSuccessStatusCode)
-                        {
-                            // Nothing went wrong, lets get outa here!
-                            break;
-                        }
-                        else if (res.StatusCode == HttpStatusCode.TooManyRequests)
-                        {
-                            this._waiter.WaitAnother(options.TimeoutInterval);
-                            Trace.WriteLine($"Rest - Response {uri} Too Many Requests, waiting {this._waiter.WaitTime}");
-                        }
-                    }
-                }
-                else if (!options.RetryAtTimeout && res.StatusCode == HttpStatusCode.TooManyRequests)
+                if (res.IsSuccessStatusCode)
                 {
-                    throw new HttpRequestException($"Failed to GET {uri}", null, res.StatusCode);
+                    // Nothing went wrong, lets continue.
+                    Trace.WriteLine($"Rest - Response {uri} Success");
+                    break;
                 }
+
+                if (options.RetryOnRatelimit && res.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    this._waiter.WaitAnother(options.RatelimitInterval);
+                    Trace.WriteLine($"Rest - Response {uri} Too Many Requests, waiting {this._waiter.WaitTime}");
+                    this._waiter.Sleep();
+                    continue;
+                }
+
+                throw new HttpRequestException($"GET {uri}", null, res.StatusCode);
             }
 
             this._stateLock.Release();
@@ -121,19 +111,8 @@ namespace Bloxlink.Rest
         {
             var uri = BuildRobloxUserUri(discordUserId, guildId).Uri;
             var user = await this.GetAsync<BloxlinkRestUserResponse>(uri, options);
-            Trace.WriteLine($"Got User {user}");
+            Trace.WriteLine($"Got User {user.GuildAccount ?? user.GlobalAccount}");
             return user;
-        }
-
-        public async Task<IEnumerable<BloxlinkRestUserResponse>> GetRobloxUsers(ulong? guildId = null, params ulong[] discordUserIds)
-        {
-            var tasks = new List<Task<BloxlinkRestUserResponse>>();
-
-            foreach (var discordUserId in discordUserIds)
-            {
-                tasks.Add(this.GetRobloxUser(discordUserId, guildId));
-            }
-            return await Task.WhenAll(tasks);
         }
 
         public void Dispose()

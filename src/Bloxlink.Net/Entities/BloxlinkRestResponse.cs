@@ -9,19 +9,6 @@ using System.Text.Json;
 
 namespace Bloxlink.Rest
 {
-    public class BloxlinkRestRequestOptions
-    {
-        /// <summary>
-        /// Wether or not to retry the request if an <see cref="HttpStatusCode.TooManyRequests"/> code was returned.
-        /// </summary>
-        public bool RetryAtTimeout { get; set; } = false;
-
-        /// <summary>
-        /// The interval at which timeout retires will be sent until <see cref="HttpStatusCode.OK"/>.
-        /// </summary>
-        public TimeSpan TimeoutInterval { get; set; } = TimeSpan.FromSeconds(15);
-    }
-
     public class BloxlinkRestResponse
     {
         public enum StatusType
@@ -44,7 +31,7 @@ namespace Bloxlink.Rest
         {
             switch (this.Error)
             {
-                case "This user is not linked with Bloxlink.Rest.":
+                case "This user is not linked with Bloxlink.":
                     throw new BloxlinkRestUserNotFoundException();
             }
         }
