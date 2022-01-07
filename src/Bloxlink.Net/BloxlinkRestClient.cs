@@ -33,8 +33,6 @@ namespace Bloxlink.Rest
 
         protected readonly RestWaiter _waiter = new();
 
-        public TimeSpan WaitInterval { get; set; } = TimeSpan.FromSeconds(8);
-
         public BloxlinkRestClient() { }
         public BloxlinkRestClient(TimeSpan timeout)
         {
@@ -56,14 +54,12 @@ namespace Bloxlink.Rest
                 if (res.IsSuccessStatusCode)
                 {
                     // Nothing went wrong, lets continue.
-                    Trace.WriteLine($"Rest - Response {uri} Success");
                     break;
                 }
 
                 if (options.RetryOnRatelimit && res.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     this._waiter.WaitAnother(options.RatelimitInterval);
-                    Trace.WriteLine($"Rest - Response {uri} Too Many Requests, waiting {this._waiter.WaitTime}");
                     this._waiter.Sleep();
                     continue;
                 }
@@ -75,25 +71,22 @@ namespace Bloxlink.Rest
 
             var content = await res.Content.ReadAsStringAsync();
 
-            BloxlinkRestResponse baseData;
+            BloxlinkRestResponse baseRestResponse;
 
             try
             {
-                baseData = JsonSerializer.Deserialize<BloxlinkRestResponse>(content);
+                baseRestResponse = JsonSerializer.Deserialize<BloxlinkRestResponse>(content)!;
             }
             catch (Exception ex)
             {
-                // TODO: Expand on message
+                // TODO: Expand on this error message.
                 throw new InvalidOperationException("Failed to serialize BloxlinkRestResponse", ex);
             }
 
-            baseData.EnsureSuccess();
+            // Ensure that this request has no errors.
+            baseRestResponse.EnsureSuccess();
 
-            var data = JsonSerializer.Deserialize<T>(content, SerializerOptions);
-
-            // Trace.WriteLine($"Completed on Task {Task.CurrentId} on Thread {Thread.CurrentThread.ManagedThreadId}");
-
-            return data;
+            return JsonSerializer.Deserialize<T>(content, SerializerOptions)!;
         }
 
         private static UriBuilder BuildRobloxUserUri(ulong discordUserId, ulong? guildId = null)
@@ -111,7 +104,6 @@ namespace Bloxlink.Rest
         {
             var uri = BuildRobloxUserUri(discordUserId, guildId).Uri;
             var user = await this.GetAsync<BloxlinkRestUserResponse>(uri, options);
-            Trace.WriteLine($"Got User {user.GuildAccount ?? user.GlobalAccount}");
             return user;
         }
 

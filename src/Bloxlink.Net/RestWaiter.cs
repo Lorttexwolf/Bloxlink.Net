@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,23 +13,25 @@ namespace Bloxlink.Rest
     {
         private DateTime _waitUntil = DateTime.MinValue;
 
+        [DisallowNull]
+        // This is quite the mess...
         public DateTime? WaitUntil
         {
             get
             {
                 if (this._waitUntil != DateTime.MinValue && DateTime.UtcNow > this._waitUntil)
                 {
-                    Trace.WriteLine($"{nameof(RestWaiter)}\t - Cleared Wait Until");
                     this._waitUntil = DateTime.MinValue;
                     return null;
                 }
-                if (this._waitUntil == DateTime.MinValue)
-                {
-                    return null;
-                }
-                return this._waitUntil;
+                return this._waitUntil == DateTime.MinValue ? null : this._waitUntil;
             }
-            set => this._waitUntil = value.Value;
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value), $"Cannot set to null");
+
+                this._waitUntil = value.Value;
+            }
         }
 
         public TimeSpan WaitTime
@@ -53,27 +56,14 @@ namespace Bloxlink.Rest
         /// </summary>
         public void Sleep()
         {
-            if (this.IsWaiting)
-            {
-                var time = this.WaitTime;
-
-                Trace.WriteLine($"{nameof(RestWaiter)}\t - Thread went to sleep for {time}");
-                Thread.Sleep(time);
-            }
-
             while (true)
             {
-                Trace.Write($"{nameof(RestWaiter)}\t - Thread woke up...");
                 if (this.IsWaiting)
                 {
-                    var time = this.WaitTime;
-
-                    Trace.WriteLine($" then went back to sleep for {time}");
-                    Thread.Sleep(time);
+                    Thread.Sleep(this.WaitTime);
                 }
                 else
                 {
-                    Trace.Write(" and stayed up.");
                     break;
                 }
             }

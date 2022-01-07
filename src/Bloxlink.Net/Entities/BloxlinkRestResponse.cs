@@ -29,10 +29,14 @@ namespace Bloxlink.Rest
         /// <exception cref="BloxlinkRestUserNotFoundException"></exception>
         public void EnsureSuccess()
         {
+            if (this.Error == null) return;
+
             switch (this.Error)
             {
                 case "This user is not linked with Bloxlink.":
                     throw new BloxlinkRestUserNotFoundException();
+                default:
+                    throw new InvalidOperationException($"Failed to ensure success of BloxlinkRestResponse.\nError: {this.Error}");
             }
         }
     }
