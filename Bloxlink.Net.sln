@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloxlink.Rest", "src\Bloxli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloxlink", "src\Bloxlink\Bloxlink.csproj", "{A7D71B5B-1E56-4A2E-9258-E6992E35827E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bloxlink.Tests", "src\Bloxlink.Net.Tests\Bloxlink.Tests.csproj", "{B7D36A80-B2C6-4202-8CE2-F91B24096C10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bloxlink.Tests", "tests\Bloxlink.Tests.csproj", "{B7D36A80-B2C6-4202-8CE2-F91B24096C10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
