@@ -15,6 +15,8 @@ namespace Bloxlink
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
+
             this._restClient.Dispose();
             this._userCache.Clear();
         }
@@ -23,14 +25,14 @@ namespace Bloxlink
         /// Gets a Bloxlink account linked to a certain <paramref name="discordUser"/>.
         /// </summary>
         /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
-        public async Task<ulong> GetUser(ulong discordUser, bool cache = true, BloxlinkRestRequestOptions? options = null)
+        public async Task<ulong> GetUserAsync(ulong discordUser, bool cache = true, BloxlinkRestRequestOptions? options = null)
         {
             if (cache && this._userCache.TryGetValue(discordUser, out var userId))
             {
                 return userId;
             }
 
-            userId = (await this._restClient.GetRobloxUser(discordUser, options: options)).GlobalAccount;
+            userId = (await this._restClient.GetUserAsync(discordUser, options: options)).GlobalAccount;
 
             if (cache) this._userCache.TryAdd(discordUser, userId);
 
@@ -43,9 +45,9 @@ namespace Bloxlink
         /// Guild member cache is not implemented.
         /// </remarks>
         /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
-        public async Task<ulong?> GetUser(ulong discordUser, ulong guild, BloxlinkRestRequestOptions? options = null)
+        public async Task<ulong?> GetUserAsync(ulong discordUser, ulong guild, BloxlinkRestRequestOptions? options = null)
         {
-            return (await this._restClient.GetRobloxUser(discordUser, guild, options)).GuildAccount;
+            return (await this._restClient.GetUserAsync(discordUser, guild, options)).GuildAccount;
         }
 
     }

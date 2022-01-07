@@ -13,7 +13,7 @@ namespace Bloxlink.Tests
         {
             using var client = new BloxlinkClient();
 
-            var user = await client.GetUser(84117866944663552);
+            var user = await client.GetUserAsync(84117866944663552);
         }
 
         [TestMethod]
@@ -21,7 +21,7 @@ namespace Bloxlink.Tests
         {
             using var client = new BloxlinkClient();
 
-            var user = await client.GetUser(474413050594721802, 372036754078826496);
+            var user = await client.GetUserAsync(474413050594721802, 372036754078826496);
 
             Assert.IsNotNull(user);
         }
@@ -35,7 +35,7 @@ namespace Bloxlink.Tests
             for (var i = 0; i < 80; i++)
             {
                 // Do not use the cache during this test.
-                var user = await client.GetUser(84117866944663552, false, options: new Rest.BloxlinkRestRequestOptions()
+                var user = await client.GetUserAsync(84117866944663552, false, options: new Rest.BloxlinkRestRequestOptions()
                 {
                     RetryOnRatelimit = true
                 });

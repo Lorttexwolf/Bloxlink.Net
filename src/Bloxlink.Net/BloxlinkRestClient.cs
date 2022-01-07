@@ -100,7 +100,7 @@ namespace Bloxlink.Rest
             return builder;
         }
 
-        public async Task<BloxlinkRestUserResponse> GetRobloxUser(ulong discordUserId, ulong? guildId = null, BloxlinkRestRequestOptions? options = null)
+        public async Task<BloxlinkRestUserResponse> GetUserAsync(ulong discordUserId, ulong? guildId = null, BloxlinkRestRequestOptions? options = null)
         {
             var uri = BuildRobloxUserUri(discordUserId, guildId).Uri;
             var user = await this.GetAsync<BloxlinkRestUserResponse>(uri, options);
@@ -109,8 +109,10 @@ namespace Bloxlink.Rest
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
+
             this._httpClient.Dispose();
-            // this._stateLock.Dispose();
+            this._stateLock.Dispose();
         }
     }
 }
