@@ -1,12 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<Nullable>enable</Nullable>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>		
+		<Description>Bloxlink.Net is an unofficial .NET API Wrapper for the Bloxlink API</Description>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<LangVersion>latest</LangVersion>
+		<Authors>Lorttexwolf</Authors>
+		<PackageTags>roblox;wrapper;api</PackageTags>
+		<PackageProjectUrl>https://github.com/Lorttexwolf/Bloxlink.Net</PackageProjectUrl>
+		<PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>git://github.com/Lorttexwolf/Bloxlink.Net</RepositoryUrl>
+		<Copyright>MIT</Copyright>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Bloxlink.Net\Bloxlink.Rest.csproj" />
-  </ItemGroup>
+		<Nullable>enable</Nullable>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Bloxlink.Net\Bloxlink.Rest.csproj" />
+	</ItemGroup>
 
 </Project>

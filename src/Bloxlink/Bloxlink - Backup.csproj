@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	  <PropertyGroup>
+		  <Version>1.0.0</Version>
+		  <AssemblyVersion>$(Version)</AssemblyVersion>
+		  <FileVersion>$(Version)</FileVersion>
+		  <AssemblyName>Bloxlink</AssemblyName>
+		  <Authors>Lorttexwolf</Authors>
+		  <Company>Lorttexwolf</Company>
+		  <Product>Bloxlink.Net</Product>
+		  <Description>Bloxlink.Net is an unofficial .NET API Wrapper for the Bloxlink API</Description>
+		  <RepositoryUrl>https://github.com/Lorttexwolf/Bloxlink.Net</RepositoryUrl>
+		  <PackageIcon>bloxlinkicon.png</PackageIcon>
+		  <PackageReadmeFile>..\README.md</PackageReadmeFile>
+		  <PackageTags>roblox;wrapper;api</PackageTags>
+		  <Copyright>MIT</Copyright>
+
+		  <Nullable>enable</Nullable>
+		  <TargetFramework>net5.0</TargetFramework>
+	  </PropertyGroup>
+
+	  <ItemGroup>
+	    <None Include="..\..\..\..\..\Desktop\bloxlinkicon.png">
+	      <Pack>True</Pack>
+	      <PackagePath>\</PackagePath>
+	    </None>
+	    <None Include="..\README.md">
+	      <Pack>True</Pack>
+	      <PackagePath>\</PackagePath>
+	    </None>
+	  </ItemGroup>
+
+	  <ItemGroup>
+			<ProjectReference Include="..\Bloxlink.Net\Bloxlink.Rest.csproj" />
+	  </ItemGroup>
+
+</Project>
