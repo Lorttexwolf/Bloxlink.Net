@@ -4,9 +4,8 @@ Bloxlink.Net is an unofficial .NET API Wrapper for the [Bloxlink API](https://bl
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
 
-<div style="display:flex; justify-content: center; align-items: center; gap: 40px;">
-  
-</div>
+## Installation (NuGet)
+Stable builds available from [NuGet](https://www.nuget.org/) through the [Bloxlink Nuget Package](https://www.nuget.org/packages/Bloxlink/)
 
 ## Examples
 ___
