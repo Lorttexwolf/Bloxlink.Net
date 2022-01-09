@@ -9,16 +9,16 @@ namespace Bloxlink
 {
     public class BloxlinkClient : IDisposable
     {
-        protected readonly BloxlinkRestClient _restClient = new();
+        protected readonly BloxlinkRestClient restClient = new();
 
-        protected readonly IDictionary<ulong, ulong> _userCache = new Dictionary<ulong, ulong>();
+        public IDictionary<ulong, ulong> RobloxUserCache { get; init; } = new Dictionary<ulong, ulong>();
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
 
-            this._restClient.Dispose();
-            this._userCache.Clear();
+            this.restClient.Dispose();
+            this.RobloxUserCache.Clear();
         }
 
         /// <summary>
@@ -27,14 +27,14 @@ namespace Bloxlink
         /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
         public async Task<ulong> GetUserAsync(ulong discordUser, bool cache = true, BloxlinkRestRequestOptions? options = null)
         {
-            if (cache && this._userCache.TryGetValue(discordUser, out var userId))
+            if (cache && this.RobloxUserCache.TryGetValue(discordUser, out var userId))
             {
                 return userId;
             }
 
-            userId = (await this._restClient.GetUserAsync(discordUser, options: options)).GlobalAccount;
+            userId = (await this.restClient.GetUserAsync(discordUser, options: options)).GlobalAccount;
 
-            if (cache) this._userCache.TryAdd(discordUser, userId);
+            if (cache) this.RobloxUserCache.TryAdd(discordUser, userId);
 
             return userId;
         }
@@ -47,7 +47,7 @@ namespace Bloxlink
         /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
         public async Task<ulong?> GetUserAsync(ulong discordUser, ulong guild, BloxlinkRestRequestOptions? options = null)
         {
-            return (await this._restClient.GetUserAsync(discordUser, guild, options)).GuildAccount;
+            return (await this.restClient.GetUserAsync(discordUser, guild, options)).GuildAccount;
         }
 
     }
