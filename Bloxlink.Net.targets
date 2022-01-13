@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
 		<Authors>Lorttexwolf</Authors>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
         <PackageTags>roblox;wrapper;api</PackageTags>
         <PackageProjectUrl>https://github.com/Lorttexwolf/Bloxlink.Net</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>

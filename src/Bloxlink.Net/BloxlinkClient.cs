@@ -9,46 +9,45 @@ namespace Bloxlink
 {
     public class BloxlinkClient : IDisposable
     {
-        protected readonly BloxlinkRestClient restClient = new();
-
-        public IDictionary<ulong, ulong> RobloxUserCache { get; init; } = new Dictionary<ulong, ulong>();
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-
-            this.restClient.Dispose();
-            this.RobloxUserCache.Clear();
-        }
+        private readonly BloxlinkRestClient restClient = new();
+            
+        public IDictionary<ulong, ulong> LinkedRobloxUserCache { get; init; } = new Dictionary<ulong, ulong>();
 
         /// <summary>
-        /// Gets a Bloxlink account linked to a certain <paramref name="discordUser"/>.
+        /// Gets the Roblox account linked to the given <paramref name="discordUser"/>.
         /// </summary>
-        /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
         public async Task<ulong> GetUserAsync(ulong discordUser, bool cache = true, BloxlinkRestRequestOptions? options = null)
         {
-            if (cache && this.RobloxUserCache.TryGetValue(discordUser, out var userId))
+            if (cache && this.LinkedRobloxUserCache.TryGetValue(discordUser, out var userId))
             {
                 return userId;
             }
 
             userId = (await this.restClient.GetUserAsync(discordUser, options: options)).GlobalAccount;
 
-            if (cache) this.RobloxUserCache.TryAdd(discordUser, userId);
+            if (cache) this.LinkedRobloxUserCache.TryAdd(discordUser, userId);
 
             return userId;
         }
+
+
         /// <summary>
-        /// Gets a Bloxlink account linked to a certain <paramref name="discordUser"/> in the specified <paramref name="guild"/>.
+        /// Gets a Roblox account linked to the <paramref name="discordUser"/> in the specified <paramref name="guild"/>.
         /// </summary>
         /// <remarks>
         /// Guild member cache is not implemented.
         /// </remarks>
-        /// <returns>The Roblox account which is linked to the given <paramref name="discordUser"/>.</returns>
         public async Task<ulong?> GetUserAsync(ulong discordUser, ulong guild, BloxlinkRestRequestOptions? options = null)
         {
             return (await this.restClient.GetUserAsync(discordUser, guild, options)).GuildAccount;
         }
 
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+
+            this.restClient.Dispose();
+            this.LinkedRobloxUserCache.Clear();
+        }
     }
 }

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Bloxlink.Rest
 {
+
     public class BloxlinkRestClient : IDisposable
     {
         public readonly static Uri BaseUrl = new("https://api.blox.link/v1/");
@@ -64,18 +65,18 @@ namespace Bloxlink.Rest
                     continue;
                 }
 
-                throw new HttpRequestException($"GET {uri}", null, res.StatusCode);
+                res.EnsureSuccessStatusCode();
             }
 
             this._stateLock.Release();
 
             var content = await res.Content.ReadAsStringAsync();
 
-            BloxlinkRestResponse baseRestResponse;
+            BloxlinkRestResponse baseResponseData;
 
             try
             {
-                baseRestResponse = JsonSerializer.Deserialize<BloxlinkRestResponse>(content)!;
+                baseResponseData = JsonSerializer.Deserialize<BloxlinkRestResponse>(content)!;
             }
             catch (Exception ex)
             {
@@ -83,15 +84,21 @@ namespace Bloxlink.Rest
                 throw new InvalidOperationException("Failed to serialize BloxlinkRestResponse", ex);
             }
 
-            // Ensure that this request has no errors.
-            baseRestResponse.EnsureSuccess();
+            // Ensure that the base request has no errors.
+            baseResponseData.EnsureSuccess();
 
-            return JsonSerializer.Deserialize<T>(content, SerializerOptions)!;
+            var responseData = JsonSerializer.Deserialize<T>(content, SerializerOptions)!;
+
+            // Ensure that the request has no errors.
+            responseData.EnsureSuccess();
+
+            return responseData;
         }
 
-        private static UriBuilder BuildRobloxUserUri(ulong discordUserId, ulong? guildId = null)
+        #region Endpoint URIs
+        private static UriBuilder GetRobloxUserEndpointUri(ulong discordUserId, ulong? guildId = null)
         {
-            var builder = new UriBuilder($"https://api.blox.link/v1/user/{discordUserId}");
+            var builder = new UriBuilder($"https://api.blox.link/v1/user/{discordUserId}");       
 
             if (guildId != null)
             {
@@ -99,10 +106,15 @@ namespace Bloxlink.Rest
             }
             return builder;
         }
+        #endregion
 
-        public async Task<BloxlinkRestUserResponse> GetUserAsync(ulong discordUserId, ulong? guildId = null, BloxlinkRestRequestOptions? options = null)
+        /// <summary>
+        /// Gets the Roblox account linked to the given <paramref name="discordUser"/>.
+        /// </summary>
+        /// <param name="guildId">An optional Discord guild to get a users linked Roblox account in.</param>
+        public async Task<BloxlinkRestUserResponse> GetUserAsync(ulong discordUser, ulong? guildId = null, BloxlinkRestRequestOptions? options = null)
         {
-            var uri = BuildRobloxUserUri(discordUserId, guildId).Uri;
+            var uri = GetRobloxUserEndpointUri(discordUser, guildId).Uri;
             var user = await this.GetAsync<BloxlinkRestUserResponse>(uri, options);
             return user;
         }

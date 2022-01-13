@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Bloxlink.Rest
 {
+    // Dont worry about this mess, it will be reworked later into a Queue?
     public class RestWaiter
     {
         private DateTime _waitUntil = DateTime.MinValue;

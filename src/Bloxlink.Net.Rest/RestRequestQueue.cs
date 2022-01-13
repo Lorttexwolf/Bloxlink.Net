@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Bloxlink.Rest.Net
 {
     // May be implemted later into BloxlinkRestClient
-    internal class RestRequestQueue
+    /*internal class RestRequestQueue
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
-    }
+    }*/
 }

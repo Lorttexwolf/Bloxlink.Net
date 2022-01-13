@@ -7,9 +7,9 @@ using System.Web;
 
 namespace Bloxlink.Rest
 {
-    public static class UriBuilderExtensions
+    internal static class UriBuilderExtensions
     {
-        public static void AddQueryParameter(this UriBuilder builder, string name, string? value)
+        internal static void AddQueryParameter(this UriBuilder builder, string name, string? value)
         {
             var query = HttpUtility.ParseQueryString(builder.Query ?? "");
             query.Set(name, value);

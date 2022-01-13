@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bloxlink.Rest
+namespace Bloxlink
 {
     [Serializable]
-    public class BloxlinkRestUserNotFoundException : Exception
+    public class BloxlinkUserNotFoundException : Exception
     {
-        public BloxlinkRestUserNotFoundException() : base("User is not linked to Bloxlink.") { }
-        public BloxlinkRestUserNotFoundException(string message) : base(message) { }
-        public BloxlinkRestUserNotFoundException(string message, Exception inner) : base(message, inner) { }
+        public BloxlinkUserNotFoundException() : base("User is not linked to Bloxlink.") { }
+        public BloxlinkUserNotFoundException(string message) : base(message) { }
+        public BloxlinkUserNotFoundException(string message, Exception inner) : base(message, inner) { }
     }
 }
