@@ -7,9 +7,10 @@ Bloxlink.Net is an unofficial .NET API Wrapper for the [Bloxlink API](https://bl
 ## Installation (NuGet)
 Stable builds are available from [NuGet](https://www.nuget.org/) through the [Bloxlink Nuget Package](https://www.nuget.org/packages/Bloxlink.Net/)
 
+
 ## Examples
 ___
-### Getting the linked Roblox account to a Discord account
+### Getting a linked Roblox account using a Discord account
 ```cs
 using var client = new BloxlinkClient();
 
