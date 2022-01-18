@@ -19,3 +19,11 @@ var robloxUserId = await client.GetUserAsync(discordUserId, cache: true);
 // Their Roblox account that's linked to a certain guild, not globally.
 // var robloxUserId = await client.GetUserAsync(discordUserId, guildId);
 ```
+
+## Versioning Guarantees
+___
+This library generally abides by [Semantic Versioning](https://semver.org). Packages are published in MAJOR.MINOR.PATCH version format.
+
+An increment of the MAJOR component indicates that a new version of the [Bloxlink API](https://blox.link/developers) is supported.
+
+All other increments of component follow what was described in the [Semantic Versioning Summary](https://semver.org/#summary).
