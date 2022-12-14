@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Bloxlink.Rest
+namespace Bloxlink.Extensions
 {
     internal static class UriBuilderExtensions
     {

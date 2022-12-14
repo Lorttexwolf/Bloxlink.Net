@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloxlink.Net.Rest", "src\Bloxlink.Net.Rest\Bloxlink.Net.Rest.csproj", "{6790BCBC-86D0-4CE0-97EA-305AF43BB4CF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloxlink.Net.Tests", "tests\Bloxlink.Net.Tests.csproj", "{B7D36A80-B2C6-4202-8CE2-F91B24096C10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bloxlink.Net", "src\Bloxlink.Net\Bloxlink.Net.csproj", "{D036A6F4-B62B-4C0E-9EE3-F31C8AAB1864}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloxlink.Net", "src\Bloxlink.Net\Bloxlink.Net.csproj", "{D036A6F4-B62B-4C0E-9EE3-F31C8AAB1864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6790BCBC-86D0-4CE0-97EA-305AF43BB4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6790BCBC-86D0-4CE0-97EA-305AF43BB4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6790BCBC-86D0-4CE0-97EA-305AF43BB4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6790BCBC-86D0-4CE0-97EA-305AF43BB4CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7D36A80-B2C6-4202-8CE2-F91B24096C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B7D36A80-B2C6-4202-8CE2-F91B24096C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7D36A80-B2C6-4202-8CE2-F91B24096C10}.Release|Any CPU.ActiveCfg = Release|Any CPU

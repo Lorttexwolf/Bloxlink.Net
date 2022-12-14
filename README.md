@@ -1,32 +1,66 @@
 # Bloxlink.Net
-Bloxlink.Net is an unofficial .NET API Wrapper for the [Bloxlink API](https://blox.link/developers)
+Bloxlink.Net is an unofficial .NET API Wrapper for the [Bloxlink API](https://blox.link/developers).
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
 
-> **Warning**: 
-> This wrapper has not been updated to support beyond v1!
+### **Installing Bloxlink.Net** 📦
+> Stable builds are available on [NuGet](https://www.nuget.org/) through the [Bloxlink Nuget Package](https://www.nuget.org/packages/Bloxlink.Net/).
+
+### Surfing the Search API 🔍
+> The Search API allows you to determine what Robox accounts are connected to a Discord user.
 > 
-> This warning will be removed once this wrapper has been updated to support v3.
-
-## Installation (NuGet)
-Stable builds are available from [NuGet](https://www.nuget.org/) through the [Bloxlink Nuget Package](https://www.nuget.org/packages/Bloxlink.Net/)
-
-
-## Examples
-___
-### Getting a linked Roblox account using a Discord account
+> **Note**:
+> This is NOT the Roblox to Discord API.
 ```cs
-using var client = new BloxlinkClient();
+using var client = new BloxlinkClient("api-key");
+await client.ValidateKey(); // Make sure to validate your key!
 
+// Get the primary account.
 ulong discordUserId = 123456789101112;
-var robloxUserId = await client.GetUserAsync(discordUserId, cache: true);
-// Their Roblox account that's linked to a certain guild, not globally.
-// var robloxUserId = await client.GetUserAsync(discordUserId, guildId);
+var req = await client.GetUserAsync(discordUserId);
+Console.WriteLine($"Fetched: {req.User.GlobalAccount}");
+
+// Get the account linked to a guild.
+ulong guildId = 372036754078826496;
+req = await client.GetUserAsync(discordUserId, guildId);
+Console.WriteLine($"Fetched: {req.User.GuildAccount}");
+```
+
+### Utilizing the Built-in Cache ⚙
+> Retrieved users are cached by default, you can access them using the `GetUser` method.
+> 
+> **Note**:
+> The cache is only cleared when the `BloxlinkClient` is disposed.
+```cs
+var res = await client.GetUserAsync(123456789101112, options: new() { PopulateCache = true });
+Console.WriteLine($"Fetched: {res.User.GlobalAccount}");
+
+// You may access your remaining quota in the BloxlinkResponse.
+Console.WriteLine($"Quota Remaining: {res.QuotaRemaining}");
+
+var cachedUserId = client.GetUser(123456789101112)!;
+Console.WriteLine($"Cached user: {cachedUserId}");
+```
+
+### Exception Handling 🚧
+> Several custom-exceptions such as `UserNotFound` and `QuotaExceeded` are provided for ease-of-use!
+```cs
+try
+{
+    var res = await client.GetUserAsync(69552131231221232);
+}
+catch (UserNotFoundException)
+{
+	Console.WriteLine("User was not found.");
+}
+catch (QuotaExceededException)
+{
+    Console.WriteLine("We have exceeded our quota!");
+}
 ```
 
 ## Versioning Guarantees
-___
 This library generally abides by [Semantic Versioning](https://semver.org). Packages are published in MAJOR.MINOR.PATCH version format.
 
 An increment of the MAJOR component indicates that a new version of the [Bloxlink API](https://blox.link/developers) is supported.

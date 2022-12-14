@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Bloxlink.Rest
+namespace Bloxlink
 {
-    public class BloxlinkRestUserResponse : BloxlinkRestResponse
+
+    public struct BloxlinkUser : IInsurable
     {
         /// <summary>
         /// A Discord users globally linked Roblox account. 
@@ -18,16 +20,20 @@ namespace Bloxlink.Rest
         /// <summary>
         /// A Discord users linked Roblox account in a Discord guild.
         /// </summary>
-        [JsonPropertyName("matchingAccount")]
+        [JsonPropertyName("robloxId")]
         public ulong? GuildAccount { get; set; }
 
-        public override void EnsureSuccess()
+        internal BloxlinkUser(ulong globalAccount, ulong guildAccount = 0)
         {
-            base.EnsureSuccess();
+            this.GlobalAccount = globalAccount;
+            this.GuildAccount = guildAccount;
+        }
 
+        void IInsurable.EnsureSuccess()
+        {
             if (this.GlobalAccount == default)
             {
-                throw new InvalidOperationException($"Failed to ensure success of {nameof(BloxlinkRestUserResponse)}, property {nameof(GlobalAccount)} cannot be {default(ulong)}.");
+                throw new InvalidOperationException($"Failed to ensure success of {nameof(BloxlinkUser)}, property {nameof(GlobalAccount)} cannot be {default(ulong)}.");
             }
         }
     }

@@ -4,12 +4,8 @@
 	<PropertyGroup>
 		<AssemblyName>Bloxlink.Net</AssemblyName>
 		<RootNamespace>Bloxlink</RootNamespace>
-		<Description>Bloxlink.Net is an unofficial .NET API Wrapper for the Bloxlink API</Description>
-		<TargetFramework>net5.0</TargetFramework>
+		<Description>Bloxlink.Net is an unofficial .NET API Wrapper for the Bloxlink API.</Description>
+		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Bloxlink.Net.Rest\Bloxlink.Net.Rest.csproj" />
-	</ItemGroup>
 </Project>
