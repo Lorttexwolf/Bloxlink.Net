@@ -1,68 +1,105 @@
 # Bloxlink.Net
-Bloxlink.Net is an unofficial .NET API Wrapper for the [Bloxlink API](https://blox.link/developers).
+
+**Bloxlink.Net** is an unofficial **.NET API wrapper** for the [Bloxlink API](https://blox.link/developers). It provides strongly-typed clients for both **guild-specific** and **global** endpoints, making it easy to integrate Roblox–Discord verification into .NET applications such as bots, web services, and administrative tools.
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
 
-### **Installing Bloxlink.Net** 📦
-> Stable builds are available on [NuGet](https://www.nuget.org/) through the [Bloxlink Nuget Package](https://www.nuget.org/packages/Bloxlink.Net/).
+## ✨ Features
 
-### Surfing the Search API 🔍
-> The Search API allows you to determine what Robox accounts are connected to a Discord user.
-> 
-> **Note**:
-> This is NOT the Roblox to Discord API.
+- 📡 **Guild Client** – Query Roblox accounts linked to Discord users *within a specific guild*.  
+- 🌍 **Global Client** – Query Roblox accounts linked to Discord users *across all guilds*.  
+- ⚡ **Async-first API** – Built on `async/await` with `HttpClient`.  
+- 🗃️ **Caching built-in** – Results cached for 5 minutes by default, configurable.  
+- 🔐 **Per-guild authorization** – Support for single or multiple guild API keys.  
+- 📦 **NuGet distribution** – Simple installation via the public NuGet package.  
+
+## 📦 Installing Bloxlink.Net
+
+Stable builds are available on [NuGet](https://www.nuget.org/).
+
+### Guild Client
+
+The `BloxlinkGuildClient` utilizes the [Bloxlink Server API](https://blox.link/dashboard/user/developer) which can access individually bound accounts to a single Discord Guild.
+
 ```cs
-using var client = new BloxlinkClient("api-key");
-await client.ValidateKey(); // Make sure to validate your key!
+// Create a client for a single guild with your API key
+using var guildClient = new BloxlinkGuildClient("api-key", 899334250262822944);
+```
 
-// Get the primary account.
+You can also initialize the client with a dictionary of guild IDs → authorization keys. This is useful if your application operates across multiple servers with guild API keys.
+
+```cs
+// Dictionary where the key is the Guild ID and the value is the API key
+var guildKeys = new Dictionary<ulong, string>
+{
+    { 899334250262822944, "api-key-1" },
+    { 812345678901234567, "api-key-2" },
+};
+
+using var guildClient = new BloxlinkGuildClient(guildKeys);
+```
+
+The client will automatically select the correct key for the guild when making requests.
+
+#### Retrieve a Roblox account linked to a Discord Guild Member.
+```cs
 ulong discordUserId = 123456789101112;
-var req = await client.GetUserAsync(discordUserId);
-Console.WriteLine($"Fetched: {req.User.GlobalAccount}");
+ulong guildId = 899334250262822944;
 
-// Get the account linked to a guild.
-ulong guildId = 372036754078826496;
-req = await client.GetUserAsync(discordUserId, guildId);
-Console.WriteLine($"Fetched: {req.User.GuildAccount}");
+var robloxUser = await guildClient.GuildMemberToRoblox(discordUserId, guildId);
+Console.WriteLine($"Roblox account ID: {robloxUser.AccountID}");
 ```
 
-### Utilizing the Built-in Cache ⚙
-> Retrieved users are cached by default, you can access them using the `GetUser` method.
-> 
-> **Note**:
-> The cache is only cleared when the `BloxlinkClient` is disposed.
+#### Fetch the Discord account linked to a Roblox user in a Discord Guild.
 ```cs
-var res = await client.GetUserAsync(123456789101112, options: new() { PopulateCache = true });
-Console.WriteLine($"Fetched: {res.User.GlobalAccount}");
+ulong guildId = 899334250262822944;
+ulong robloxUserId = 248624943;
 
-// You may access your remaining quota in the BloxlinkResponse.
-Console.WriteLine($"Quota Remaining: {res.QuotaRemaining}");
-
-var cachedUserId = client.GetUser(123456789101112)!;
-Console.WriteLine($"Cached user: {cachedUserId}");
+var guildMember = await client.RobloxToGuildMember(robloxUserId, guildId);
+Console.WriteLine($"Discord account ID: {guildMember.AccountID}");
 ```
 
-### Exception Handling 🚧
-> Several custom-exceptions such as `UserNotFound` and `QuotaExceeded` are provided for ease-of-use!
+### Global Client
+
+The `BloxlinkGlobalClient` utilizes the [Bloxlink Global API](https://blox.link/dashboard/user/developer) which can access global bound accounts that aren't tied to a specific Discord Guild.
+
 ```cs
-try
-{
-    var res = await client.GetUserAsync(69552131231221232);
-}
-catch (UserNotFoundException)
-{
-	Console.WriteLine("User was not found.");
-}
-catch (QuotaExceededException)
-{
-    Console.WriteLine("We have exceeded our quota!");
-}
+// Create a global client with your API key
+using var globalClient = new BloxlinkGlobalClient("api-key");
 ```
 
-## Versioning Guarantees
-This library generally abides by [Semantic Versioning](https://semver.org). Packages are published in MAJOR.MINOR.PATCH version format.
+#### Get the Roblox account linked to a Discord user globally
+```cs
+ulong discordUserId = 123456789101112;
 
-An increment of the MAJOR component indicates that a new version of the [Bloxlink API](https://blox.link/developers) is supported.
+var robloxUser = await globalClient.DiscordToRobloxUser(discordUserId);
+Console.WriteLine($"Roblox account ID: {robloxUser.AccountId}");
+
+```
+
+#### Get the Discord account linked to a Roblox user globally
+```cs
+ulong robloxUserId = 248624943;
+
+var discordUser = await globalClient.RobloxToDiscordUser(robloxUserId);
+Console.WriteLine($"Discord account ID: {discordUser.AccountId}");
+```
+
+## Account Information
+
+Acccount objects only expose account IDs (Discord or Roblox). Future versions may provide richer information via `BloxlinkResolvedRobloxUser` when premium API features are documented and tested.
+
+## Built-in Caching
+
+* All retrievals are cached by default for 5 minutes `guildClient.CacheDuration`.
+* Cache usage can be overridden per request by passing a `BloxlinkRequestOptions` instance.
+* Cached values automatically expire based on the configured duration.
+
+## Versioning
+
+This library generally abides by [Semantic Versioning](https://semver.org). 
+Packages are published in `BLOXLINK.MAJOR.MINOR.PATCH` version format.
+
+An increment of the `BLOXLINK` component indicates that a new version of the [Bloxlink API](https://blox.link/developers) is supported.
 
 All other increments of component follow what was described in the [Semantic Versioning Summary](https://semver.org/#summary).
